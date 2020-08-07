@@ -55,7 +55,6 @@ track database completeness and database version information (if given in the fi
       parC = c("parameter", "value")
       class(d_par_uniq) = "data.frame"
       d_par2 = cbind(d_par_uniq[d_par_uniq$page==0, parC], d_par_uniq[d_par_uniq$page==1, parC])
-      
       ## HTML: alternative table
       ## (do this before line breaks, since Html can handle larger strings)      
       tbl_f = getHTMLTable(d_par2, header = fasta_files, font_size = 12)
@@ -74,12 +73,17 @@ track database completeness and database version information (if given in the fi
       }
       d_par2[ , 2] = sapply(d_par2[ , 2], splitMaxLen)
       d_par2[ , 4] = sapply(d_par2[ , 4], splitMaxLen)
-      
+
       plot_title = "PAR: parameters"
       ## PDF: split table onto multiple pages if necessary...
       par_pl = byXflex(d_par2, 1:nrow(d_par2), 25, plotTable, sort_indices = TRUE, title = plot_title, footer = fasta_files)
       
-      return(list(plots = par_pl, htmlTable = tbl_f))
+      mzQCdata_ <- list(d_par2)
+      qcCv <- list("parameters (name and value)")
+      quality <- list("runQuality")
+      input <- list("parameters.txt")
+      
+      return(list(plots = par_pl, htmlTable = tbl_f, mzQCdata = mzQCdata_, qcCV = qcCv, quality_type = quality, input_file = input))
     }, 
     qcCat = NA_character_, 
     qcName = "PAR:~MQ~Parameters", 
